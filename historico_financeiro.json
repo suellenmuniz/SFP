@@ -1,0 +1,32 @@
+[
+    {
+        "data": "28/10/2025 01:53",
+        "descricao": "1500",
+        "tipo": "entrada",
+        "valor": 1500.0
+    },
+    {
+        "data": "28/10/2025 01:53",
+        "descricao": "750",
+        "tipo": "saida",
+        "valor": 750.0
+    },
+    {
+        "data": "28/10/2025 01:54",
+        "descricao": "ganho",
+        "tipo": "entrada",
+        "valor": 500.0
+    },
+    {
+        "data": "28/10/2025 15:22",
+        "descricao": "salario",
+        "tipo": "entrada",
+        "valor": 1500.0
+    },
+    {
+        "data": "28/10/2025 15:22",
+        "descricao": "conta agua",
+        "tipo": "saida",
+        "valor": 150.0
+    }
+]
