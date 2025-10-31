@@ -1,89 +1,88 @@
-const tbody = document.querySelector("tbody");
-const descitem = document.querySelector("#desc");
-const amount = document.querySelector("#Amount");
-const type = document.querySelector("#type");
-const btn = document.querySelector("#btnNew");
+// Alternância visual
+const card = document.getElementById("card");
+const btnCadastro = document.getElementById("btnCadastro");
+const btnLogin = document.getElementById("btnLogin");
 
-const incomes = document.querySelector(".incomes");
-const expenses = document.querySelector(".expenses");
-const total = document.querySelector(".total");
+btnCadastro.addEventListener("click", () => card.classList.add("active"));
+btnLogin.addEventListener("click", () => card.classList.remove("active"));
 
-let itens = getItensBD();
+// Elementos do cadastro
+const cadastroForm = document.getElementById("cadastroForm");
+const cadMsg = document.getElementById("cadMsg");
 
-btn.addEventListener("click", () => {
-  if (descitem.value === "" || amount.value === "" || type.value === "") {
-    return alert("Por favor, preencha todos os campos!");
+// Elementos do login
+const loginForm = document.getElementById("loginForm");
+const loginMsg = document.getElementById("loginMsg");
+
+// Salvar usuário no LocalStorage
+function salvarUsuario(usuario) {
+  localStorage.setItem("sfp_user", JSON.stringify(usuario));
+}
+
+// Pegar usuário
+function getUsuario() {
+  return JSON.parse(localStorage.getItem("sfp_user")) || null;
+}
+
+// CADASTRO
+cadastroForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const nome = document.getElementById("cadNome").value.trim();
+  const email = document.getElementById("cadEmail").value.trim();
+  const senha = document.getElementById("cadSenha").value;
+  const confirma = document.getElementById("cadConfirma").value;
+
+  if (!nome || !email || !senha || !confirma) {
+    cadMsg.textContent = "Preencha todos os campos.";
+    cadMsg.className = "msg erro";
+    return;
   }
 
-  itens.push({
-    desc: descitem.value,
-    amount: parseFloat(amount.value).toFixed(2),
-    type: type.value,
-  });
+  if (senha !== confirma) {
+    cadMsg.textContent = "As senhas não coincidem.";
+    cadMsg.className = "msg erro";
+    return;
+  }
 
-  setItensBD();
-  loadItens();
+  const usuario = { nome, email, senha };
+  salvarUsuario(usuario);
 
-  descitem.value = "";
-  amount.value = "";
+  cadMsg.textContent = "Cadastro realizado com sucesso!";
+  cadMsg.className = "msg sucesso";
+  cadastroForm.reset();
+
+  setTimeout(() => {
+    cadMsg.textContent = "";
+    card.classList.remove("active"); // volta ao login
+  }, 1500);
 });
 
-function deleteItem(index) {
-  itens.splice(index, 1);
-  setItensBD();
-  loadItens();
-}
+// LOGIN
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-function insertItem(item, index) {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${item.desc}</td>
-    <td>R$ ${item.amount}</td>
-    <td class="columnType">
-      ${
-        item.type === "Entrada"
-          ? '<i class="bx bxs-chevron-up-circle" style="color:#00c9a7;"></i>'
-          : '<i class="bx bxs-chevron-down-circle" style="color:#d83121;"></i>'
-      }
-    </td>
-    <td class="columnAction">
-      <button onclick="deleteItem(${index})"><i class='bx bxs-trash'></i></button>
-    </td>
-  `;
-  tbody.appendChild(tr);
-}
+  const email = document.getElementById("loginEmail").value.trim();
+  const senha = document.getElementById("loginSenha").value;
 
-function loadItens() {
-  itens = getItensBD();
-  tbody.innerHTML = "";
-  itens.forEach((item, index) => insertItem(item, index));
-  updateTotals();
-}
+  const usuario = getUsuario();
 
-function updateTotals() {
-  const totalIncomes = itens
-    .filter(i => i.type === "Entrada")
-    .reduce((acc, cur) => acc + Number(cur.amount), 0)
-    .toFixed(2);
+  if (!usuario) {
+    loginMsg.textContent = "Nenhum usuário cadastrado.";
+    loginMsg.className = "msg erro";
+    return;
+  }
 
-  const totalExpenses = itens
-    .filter(i => i.type === "Saída")
-    .reduce((acc, cur) => acc + Number(cur.amount), 0)
-    .toFixed(2);
+  if (email === usuario.email && senha === usuario.senha) {
+    loginMsg.textContent = `Bem-vindo, ${usuario.nome}!`;
+    loginMsg.className = "msg sucesso";
 
-  const totalAmount = (totalIncomes - totalExpenses).toFixed(2);
-
-  incomes.textContent = totalIncomes;
-  expenses.textContent = totalExpenses;
-  total.textContent = totalAmount;
-}
-
-function getItensBD() {
-  return JSON.parse(localStorage.getItem("itens")) ?? [];
-}
-
-function setItensBD() {
-  localStorage.setItem("itens", JSON.stringify(itens));
-}
-
-loadItens();
+    setTimeout(() => {
+      loginMsg.textContent = "";
+      alert(`Login bem-sucedido!\nBem-vindo, ${usuario.nome}`);
+    }, 1000);
+  } else {
+    loginMsg.textContent = "Email ou senha incorretos.";
+    loginMsg.className = "msg erro";
+  }
+});

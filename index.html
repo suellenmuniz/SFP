@@ -1,60 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle Financeiro</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://cdn.boxicons.com/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Sistema Financeiro Pessoal</title>
 </head>
 <body>
-  <main>
-    <a href="menu.html"
-   style="display:block;text-align:center;margin:20px;color:#2563eb;font-weight:bold;">
-  ← Voltar ao Menu
-</a>
-
-    <div class="resume">
-      <div>Entradas: R$ <span class="incomes">0.00</span></div>
-      <div>Saídas: R$ <span class="expenses">0.00</span></div>
-      <div>Total: R$ <span class="total">0.00</span></div>
-    </div>
-
-    <div class="newItem">
-      <div class="divDesc">
-        <label for="desc">Descrição</label>
-        <input type="text" id="desc">
-      </div>
-      <div class="divAmount">
-        <label for="Amount">Valor</label>
-        <input type="number" id="Amount">
-      </div>
-      <div class="divType">
-        <label for="type">Tipo</label>
-        <select id="type">
-          <option value="">Selecione</option>
-          <option>Entrada</option>
-          <option>Saída</option>
-        </select>
-      </div>
-      <button id="btnNew">Incluir</button>
-    </div>
-
-    <div class="divTable">
-      <table>
-        <thead>
-          <tr>
-            <th>Descrição</th>
-            <th class="columnAmount">Valor</th>
-            <th class="columnType">Tipo</th>
-            <th class="columnAction"></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </main>
-
-  <script src="script.js"></script>
+    <section>
+        <div class="circle"></div>
+        <header>
+            <a href="#"> <img src="image/logo.png" alt="Logo" class="Logo"></a>
+            <nav class="navegation">
+                <ul>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Sobre</a></li>
+                    <li><a href="#">Serviços</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div class="container">
+            <div class="text">
+            <h2>Sistema Financeiro Pessoal</h2>
+            <p>Gerencie suas finanças de forma eficiente e prática com nosso sistema financeiro pessoal. Controle seus gastos, acompanhe seu orçamento e alcance seus objetivos financeiros.</p>
+        <a href="login.html" class="btn">Comece Agora</a>
+            </div>
+        </div>
+        <ul class="icons">
+            <li><a href="#"><img src="image/facebook.png" alt="Facebook"></a></li>
+            <li><a href="#"><img src="image/twitter.png" alt="Twitter"></a></li>
+            <li><a href="#"><img src="image/instagram.png" alt="Instagram"></a></li>
+        </ul>
+</div>
+    </section>
 </body>
 </html>
