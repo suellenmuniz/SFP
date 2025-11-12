@@ -1,0 +1,116 @@
+:root{
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --muted: #6b7280;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,var(--bg),#eef2ff);
+      color:#0b1227;
+      padding:20px;
+    }
+    .wrap{
+      width:100%;
+      max-width:720px;
+      background:var(--card);
+      border-radius:12px;
+      box-shadow:0 8px 30px rgba(11,22,39,0.07);
+      overflow:hidden;
+    }
+
+    header{
+      padding:20px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(11,22,39,0.03);
+    }
+    header h1{margin:0;font-size:18px}
+    .saldo-box{
+      padding:18px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .saldo-card{
+      background:linear-gradient(90deg,var(--accent),#4f46e5);
+      color:#fff;
+      padding:16px 20px;
+      border-radius:10px;
+      min-width:260px;
+    }
+    .saldo-card small{display:block;opacity:0.9;color:rgba(255,255,255,0.9)}
+    .saldo-valor{
+      font-size:22px;
+      font-weight:700;
+      margin-top:6px;
+    }
+
+    .controls{
+      padding:18px 0;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .controls input[type="number"], .controls input[type="text"]{
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #e6e9f2;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    .controls .btn{
+      padding:10px 14px;
+      border-radius:8px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn-deposit{background:var(--success); color:#fff}
+    .btn-withdraw{background:var(--danger); color:#fff}
+    .btn-clear{background:#e6e9f2; color:var(--muted)}
+
+    main{padding:18px 24px;}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:18px;
+    }
+    .panel{
+      background:#fff;
+      border:1px solid rgba(11,22,39,0.03);
+      border-radius:10px;
+      padding:12px;
+      min-height:140px;
+    }
+    .panel h3{margin:0 0 8px 0;font-size:14px;color:var(--muted)}
+    .history{max-height:300px; overflow:auto;}
+    .item{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 6px;
+      border-bottom:1px dashed rgba(11,22,39,0.03);
+    }
+    .item:last-child{border-bottom:0}
+    .meta{font-size:12px;color:var(--muted)}
+    .valor{font-weight:700}
+
+    footer{padding:12px 24px;text-align:center;color:var(--muted);font-size:13px}
+    @media(max-width:860px){
+      .grid{grid-template-columns:1fr}
+      .saldo-card{min-width:unset}
+      header{flex-direction:column;align-items:flex-start;gap:8px}
+    }

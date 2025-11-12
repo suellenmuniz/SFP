@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SFP - Login e Cadastro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+ 
+  <section class="containerPai">
+    <div class="card" id="card">
+
+      <!-- LOGIN -->
+      <div class="formBox login">
+        <h2>Fazer Login</h2>
+      
+
+        <form id="loginForm" action="{{ url_for('login') }}" method="POST">
+          <input type="email" id="loginEmail" name="email" placeholder="Email" required />
+          
+          <div >
+            <input type="password" id="loginSenha" name="senha" placeholder="Senha" required />
+            <button type="button" class="mostrar" id="toggleLoginSenha" aria-label="Mostar senha">Mostrar</button>
+          </div>
+          
+          <button type="submit">Entrar</button>
+        </form>
+
+        <p class="msg" id="cadMsg"></p>
+        <p>Não tem conta? <a href="#" id="btnCadastro">Cadastre-se</a></p>
+      </div>
+
+      <!-- CADASTRO -->
+      <div class="formBox cadastro">
+        <h2>Criar Conta</h2>
+        
+
+        <form id="cadastroForm" action="{{ url_for('cadastrar') }}" method="POST">
+          <input type="text" id="cadNome" name="username" placeholder="Nome" required />
+          <input type="email" id="cadEmail" name="email" placeholder="Email" required />
+          
+          <div>
+            <input type="password" id="cadSenha" name="senha" placeholder="Senha" required />
+            <button type="button" class="mostrar" id="toggleCadSenha" aria-label="Mostrar senha">Mostrar</button>
+          </div>
+
+          <div>
+            <input type="password" id="cadConfirma" name="confirma" placeholder="Confirmar senha" required />
+            <button type="button" class="mostrar" id="toggleCadConfirmar" aria-label="Mostrar senha">Mostrar</button>
+          </div>
+
+          <button type="submit">Cadastrar</button>
+        </form>
+
+        <p class="msg" id="cadMsg"></p>
+        <p>Já tem conta? <a href="#" id="btnLogin">Faça login</a></p>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
