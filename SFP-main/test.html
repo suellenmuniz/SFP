@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="style.css">
+  <title>Seu Banco - Saldo</title>
+</head>
+<body>
+  <div class="wrap" role="application" aria-label="Aplicativo de saldo">
+    <header>
+      <h1>Meu Banco — Conta Pessoal</h1>
+      <div class="meta" id="conta-info">Ag 0001 • Conta 12345-6</div>
+    </header>
+
+    <div class="saldo-box">
+      <div class="saldo-card" aria-live="polite">
+        <small>Saldo disponível</small>
+        <div id="saldoValor" class="saldo-valor">R$ 0,00</div>
+      </div>
+
+      <div style="flex:1">
+        <p style="margin:0 0 8px 0;color:var(--muted)">Registrar movimentação</p>
+        <div class="controls" role="region" aria-label="Controles de movimentação">
+          <input id="descricao" type="text" placeholder="Descrição (ex: Salário, Mercado)" style="flex:1"/>
+          <input id="valor" type="number" step="0.01" min="0.01" placeholder="Valor R$" style="width:120px"/>
+          <button id="btnDeposit" class="btn btn-deposit">Depositar</button>
+          <button id="btnWithdraw" class="btn btn-withdraw">Sacar</button>
+          <button id="btnClear" class="btn btn-clear" title="Limpar histórico">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <link rel="stylesheet" href="style0.css">
+...
+<a href="menu.html"
+   style="display:block;text-align:center;margin:20px;color:#2563eb;font-weight:bold;">
+  ← Voltar ao Menu
+</a>
+
+      <div class="grid">
+        <div class="panel">
+          <h3>Histórico de transações</h3>
+          <div id="history" class="history" aria-live="polite">
+            <div class="meta">Nenhuma transação registrada.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Resumo</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <div class="meta">Entradas: <span id="totalIn">R$ 0,00</span></div>
+            <div class="meta">Saídas: <span id="totalOut">R$ 0,00</span></div>
+            <div class="meta">Última movimentação: <span id="lastMov">—</span></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      @SFP - Sistema Financeiro Pessoal
+    </footer>
+  </div>
+  <div class="sidebar-left">
+    <div class="calendar-box">
+     </div>
+     <div id="calendar"></div>
+
+    <div class="notes-box">
+
+    <h3>Bloco de Notas</h3>
+
+   <textarea id="novaNota" maxlength="97" placeholder="Escreva sua anotação..."></textarea>
+   <div id="contador">0 / 97</div>
+
+   <button id="adicionarNota">Adicionar anotação</button>
+
+   <div id="listaNotas"></div>
+
+<!-- BLOCO DE NOTAS -->
+<script>
+const novaNota = document.getElementById("novaNota");
+const adicionarNota = document.getElementById("adicionarNota");
+const listaNotas = document.getElementById("listaNotas");
+
+let notas = JSON.parse(localStorage.getItem("sfp_notas_lista")) || [];
+
+
+function renderNotas() {
+    listaNotas.innerHTML = "";
+
+    notas.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.classList.add("nota-card");
+
+        card.innerHTML = `
+            <small>${item.data}</small>
+            <p>${item.texto}</p>
+        `;
+
+        listaNotas.appendChild(card);
+    });
+}
+
+adicionarNota.addEventListener("click", () => {
+    const texto = novaNota.value.trim();
+    if (!texto) return alert("Escreva algo antes!");
+
+    // Data automática
+    const agora = new Date();
+    const dataFormatada = agora.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    const nova = { texto, data: dataFormatada };
+
+    notas.unshift(nova); // adiciona no topo
+    localStorage.setItem("sfp_notas_lista", JSON.stringify(notas));
+
+    novaNota.value = "";
+    renderNotas();
+});
+
+
+function renderNotas() {
+    listaNotas.innerHTML = "";
+
+    notas.forEach((item, index) => {
+
+        const card = document.createElement("div");
+        card.classList.add("nota-card");
+
+        card.innerHTML = `
+            <small>${item.data}</small>
+            <p>${item.texto}</p>
+        `;
+
+        // BOTÃO EXCLUIR
+        const btnExcluir = document.createElement("button");
+        btnExcluir.textContent = "Excluir";
+        btnExcluir.classList.add("btn-excluir");
+
+        btnExcluir.addEventListener("click", () => {
+            notas.splice(index, 1);            // remove do array
+            localStorage.setItem("sfp_notas_lista", JSON.stringify(notas));  
+            renderNotas();                     // atualiza a lista
+        });
+
+        card.appendChild(btnExcluir);
+        listaNotas.appendChild(card);
+    });
+}
+const limite = 97;
+const contador = document.getElementById("contador");
+
+novaNota.addEventListener("input", () => {
+    let tamanho = novaNota.value.length;
+
+    if (tamanho > limite) {
+        novaNota.value = novaNota.value.slice(0, limite);
+        tamanho = limite;
+    }
+
+    contador.textContent = `${tamanho} / ${limite}`;
+});
+</script>
+
+
+<!-- FIM BLOCO DE NOTAS -->
+
+<!-- Calendario -->
+<script>
+ function gerarCalendario() {
+    const div = document.getElementById("calendario-aberto");
+
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = hoje.getMonth();
+
+    const nomesMeses = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+    ];
+
+    const diasSemana = ["D","S","T","Q","Q","S","S"];
+
+    const primeiroDia = new Date(ano, mes, 1).getDay();
+    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+
+    let html = `<h4>${nomesMeses[mes]} ${ano}</h4>`;
+    html += `<div class="cal-grid">`;
+
+    // Cabeçalho dos dias
+    diasSemana.forEach(d => html += `<div class="cal-dia"><strong>${d}</strong></div>`);
+
+    // Espaços antes do dia 1
+    for (let i = 0; i < primeiroDia; i++) {
+        html += `<div class="cal-dia"></div>`;
+    }
+
+    // Dias
+    for (let dia = 1; dia <= ultimoDia; dia++) {
+        const isHoje = dia === hoje.getDate();
+        html += `<div class="cal-dia ${isHoje ? 'cal-hoje' : ''}">${dia}</div>`;
+    }
+
+    html += `</div>`;
+    div.innerHTML = html;
+}
+
+const calendar = document.getElementById("calendar");
+
+const monthNames = [
+  "Janeiro", "Fevereiro", "Março", "Abril",
+  "Maio", "Junho", "Julho", "Agosto",
+  "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
+const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+// Intervalo permitido
+const minYear = 2025;
+const minMonth = 10; // Novembro
+
+const maxYear = 2026;
+const maxMonth = 11; // Dezembro
+
+let currentYear = 2025;
+let currentMonth = 10;
+
+function renderMonth() {
+  calendar.innerHTML = "";
+
+  const monthDiv = document.createElement("div");
+  monthDiv.classList.add("month");
+
+  // Header com setas
+  const header = document.createElement("div");
+  header.classList.add("month-header");
+
+  const btnPrev = document.createElement("button");
+  btnPrev.textContent = "←";
+  btnPrev.onclick = prevMonth;
+
+  const btnNext = document.createElement("button");
+  btnNext.textContent = "→";
+  btnNext.onclick = nextMonth;
+
+  const title = document.createElement("h3");
+  title.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  header.appendChild(btnPrev);
+  header.appendChild(title);
+  header.appendChild(btnNext);
+
+  monthDiv.appendChild(header);
+
+  // Área dos dias
+  const daysDiv = document.createElement("div");
+  daysDiv.classList.add("days");
+
+  dayNames.forEach(day => {
+    const d = document.createElement("div");
+    d.textContent = day;
+    d.classList.add("day-name");
+    daysDiv.appendChild(d);
+  });
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    daysDiv.appendChild(document.createElement("div"));
+  }
+
+  for (let day = 1; day <= totalDays; day++) {
+    const d = document.createElement("div");
+    d.textContent = day;
+    d.classList.add("day");
+    daysDiv.appendChild(d);
+  }
+
+  monthDiv.appendChild(daysDiv);
+  calendar.appendChild(monthDiv);
+}
+
+function nextMonth() {
+  if (currentYear === maxYear && currentMonth === maxMonth) return;
+
+  currentMonth++;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+  renderMonth();
+}
+
+function prevMonth() {
+  if (currentYear === minYear && currentMonth === minMonth) return;
+
+  currentMonth--;
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderMonth();
+}
+
+renderMonth();
+</script>
+
+<!-- FINAL CALENDÁRIO -->
+
+
+
+  <script>
+    // JavaScript para saldo e histórico
+    let saldo = 0;
+    let totalIn = 0;
+    let totalOut = 0;
+    const historyEl = document.getElementById('history');
+    const saldoValorEl = document.getElementById('saldoValor');
+    const totalInEl = document.getElementById('totalIn');
+    const totalOutEl = document.getElementById('totalOut');
+    const lastMovEl = document.getElementById('lastMov');
+
+    function formatMoney(v) {
+      return v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+    }
+
+    function renderSaldo() {
+      saldoValorEl.textContent = formatMoney(saldo);
+      totalInEl.textContent = formatMoney(totalIn);
+      totalOutEl.textContent = formatMoney(totalOut);
+      if (saldo < 0) {
+        saldoValorEl.style.color = '#fff';
+        saldoValorEl.parentElement.style.background = 'linear-gradient(90deg,#dc2626,#ff7b7b)';
+      } else {
+        saldoValorEl.style.color = '#fff';
+        saldoValorEl.parentElement.style.background = 'linear-gradient(90deg,#2563eb,#4f46e5)';
+      }
+    }
+
+    function addHistoryItem(desc, value, type) {
+      const item = document.createElement('div');
+      item.className = 'item';
+      const left = document.createElement('div');
+      left.innerHTML = `
+     <div><strong>${desc}</strong></div>
+  <div class="meta">${new Date().toLocaleString()}</div>
+`;
+
+const right = document.createElement('div');
+right.innerHTML = `
+  <div class="valor" style="color:${type==='in'?'#16a34a':'#dc2626'}">${formatMoney(value)}</div>
+  <div class="meta">${type==='in'?'Entrada':'Saída'}</div>
+`;
+
+item.appendChild(left);
+item.appendChild(right);
+
+      if (historyEl.children.length === 1 && historyEl.children[0].classList.contains('meta')) {
+        historyEl.innerHTML = '';
+      }
+      historyEl.prepend(item);
+      lastMovEl.textContent = new Date().toLocaleString();
+    }
+
+    document.getElementById('btnDeposit').addEventListener('click', ()=> {
+      const desc = document.getElementById('descricao').value.trim() || 'Depósito';
+      const val = Number(document.getElementById('valor').value);
+      if (!val || val <= 0) { alert('Informe um valor válido.'); return; }
+      saldo += val;
+      totalIn += val;
+      addHistoryItem(desc, val, 'in');
+      renderSaldo();
+      document.getElementById('descricao').value = '';
+      document.getElementById('valor').value = '';
+    });
+
+    document.getElementById('btnWithdraw').addEventListener('click', ()=> {
+      const desc = document.getElementById('descricao').value.trim() || 'Saque';
+      const val = Number(document.getElementById('valor').value);
+      if (!val || val <= 0) { alert('Informe um valor válido.'); return; }
+      if (val > saldo) {
+        if (!confirm('Saldo insuficiente. Deseja prosseguir e ficar no negativo?')) return;
+      }
+      saldo -= val;
+      totalOut += val;
+      addHistoryItem(desc, val, 'out');
+      renderSaldo();
+      document.getElementById('descricao').value = '';
+      document.getElementById('valor').value = '';
+    });
+
+    document.getElementById('btnClear').addEventListener('click', ()=> {
+      if (!confirm('Apagar todas as transações e resetar saldo?')) return;
+      saldo = 0; totalIn = 0; totalOut = 0;
+      historyEl.innerHTML = '<div class="meta">Nenhuma transação registrada.</div>';
+      lastMovEl.textContent = '—';
+      renderSaldo();
+    });
+
+    // inicializa
+    renderSaldo();
+  </script>
+</body>
+</html>
